@@ -1,0 +1,8 @@
+python 3
+
+numpy
+pip3 install numpy
+
+matplotlib
+pip3 install matplotlib
+
