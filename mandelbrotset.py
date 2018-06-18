@@ -90,15 +90,13 @@ def arr(image_size):
 
 def make_image(X):
     plt.axis('off')
-    plt.imshow(X, cmap='magma')
     time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    plt.savefig("images/%s.png" % time)
-    plt.show()
+    plt.imsave("images/%s.png" % time, X, cmap='magma')
 
 
 if __name__ == '__main__':
 
-    image_size = 400
+    image_size = 1920
 
     # mandelbrotset
     # M = arr(image_size)
@@ -108,9 +106,8 @@ if __name__ == '__main__':
     # julia set
     real_value = -0.8
     imaginary_value = 0.156
-
     J = arr(image_size)
-    julia_set(J, real_value, imaginary_value, zoom_factor=1.3)
+    julia_set(J, real_value, imaginary_value, zoom_factor=1.3, maxiter=200, horizon=3)
     make_image(J)
 
 
