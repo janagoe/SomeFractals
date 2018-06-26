@@ -4,13 +4,16 @@ import datetime
 import math
 
 
-def mandelbrotset(X, maxiter=100, horizon=2, zoom_point_x=0, zoom_point_y=0, zoom_factor=1):
+def mandelbrotset(image_size, image_name, maxiter=100, horizon=2,
+                  zoom_point_x=0, zoom_point_y=0, zoom_factor=1):
     """
-    The values of the Mandelbrot set will be calculated and written into the array X.
+    The values of the Mandelbrot set will be calculated and written into the array M.
     """
 
-    image_width = len(X[0])
-    image_height = len(X)
+    M = arr(image_size)
+
+    image_width = len(M[0])
+    image_height = len(M)
 
     for r_pixel in range(image_width):  # real
         for i_pixel in range(image_height):  # imaginary
@@ -18,16 +21,21 @@ def mandelbrotset(X, maxiter=100, horizon=2, zoom_point_x=0, zoom_point_y=0, zoo
             comp = complex_number_from_pixels(image_width, image_height, zoom_point_x, zoom_point_y, zoom_factor,
                                               r_pixel, i_pixel)
 
-            X[i_pixel][r_pixel] = color_code(comp, 0, maxiter, horizon)
+            M[i_pixel][r_pixel] = color_code(comp, 0, maxiter, horizon)
+
+    make_image(M, image_name)
 
 
-def julia_set(X, complex_x, complex_y, maxiter=100, horizon=2, zoom_point_x=0, zoom_point_y=0, zoom_factor=1):
+def julia_set(image_size, image_name, complex_x, complex_y, maxiter=100, horizon=2,
+              zoom_point_x=0, zoom_point_y=0, zoom_factor=1):
     """
     The values of the Julia set will be calculated and written into the array X.
     """
 
-    image_width = len(X[0])
-    image_height = len(X)
+    J = arr(image_size)
+
+    image_width = len(J[0])
+    image_height = len(J)
 
     for r_pixel in range(image_width):  # real
         for i_pixel in range(image_height):  # imaginary
@@ -40,8 +48,9 @@ def julia_set(X, complex_x, complex_y, maxiter=100, horizon=2, zoom_point_x=0, z
             start_number = complex_number_from_pixels(image_width, image_height, zoom_point_x, zoom_point_y,
                                                       zoom_factor, r_pixel, i_pixel)
 
-            X[i_pixel][r_pixel] = color_code(comp, start_number, maxiter, horizon)
+            J[i_pixel][r_pixel] = color_code(comp, start_number, maxiter, horizon)
 
+    make_image(J, image_name)
 
 def complex_number_from_pixels(array_width, array_height, zoom_point_x, zoom_point_y, zoom_factor, x, y):
     """
@@ -140,31 +149,16 @@ def arr(size):
     return np.zeros([size, size])  # [image_height, image_width]
 
 
-def make_image(X):
+def make_image(X, name=''):
     """
+
     Creating an image out of the array with the fractal values.
     The image name will be the current time, and it will be saved in the folder /images.
     """
+
+    if name == '':
+        name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     plt.axis('off')
-    time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    plt.imsave("images/%s.png" % time, X, cmap='magma')
-
-
-if __name__ == '__main__':
-
-    image_size = 1920
-
-    # uncomment either the mandelbrot set or the julia set, depending on what you want
-
-    # mandelbrotset
-    M = arr(image_size)
-    mandelbrotset(M)
-    make_image(M)
-
-    # julia set
-    real_value = -0.8
-    imaginary_value = 0.156
-    J = arr(image_size)
-    julia_set(J, real_value, imaginary_value, zoom_factor=1.3, maxiter=200, horizon=3)
-    make_image(J)
+    plt.imsave("images/%s.png" % name, X, cmap='magma')
 
